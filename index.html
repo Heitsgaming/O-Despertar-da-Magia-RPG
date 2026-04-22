@@ -36,33 +36,66 @@
 
         area { cursor: pointer; }
 
-        /* --- NOVO: Estilo do Quadro do Google Forms --- */
-        .forms-link {
+        /* --- Painel Lateral Direita --- */
+        .side-panel {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1001;
+            max-width: 320px;
+        }
+
+        /* Quadro de Texto Explicativo */
+        .info-box {
             background: #fdf5e6;
             border: 2px solid #5d4037;
             border-radius: 4px;
-            padding: 12px 18px;
+            padding: 15px;
+            color: #3e2723;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .info-box strong {
+            display: block;
+            margin: 4px 0;
+            color: #5d4037;
+        }
+
+        /* Estilo dos Links (Caixotes) */
+        .rpg-link {
+            background: #fdf5e6;
+            border: 2px solid #5d4037;
+            border-radius: 4px;
+            padding: 10px 15px;
             text-decoration: none;
             color: #5d4037;
             font-family: 'Garamond', serif;
             font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 1001;
-            transition: transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.2s ease;
+            text-align: center;
         }
 
-        .forms-link:hover {
-            transform: translateY(-3px);
+        .rpg-link:hover {
+            transform: translateX(-5px);
             background: #f5eccd;
         }
 
+        /* Destaque para o link do formulário */
+        .forms-highlight {
+            background: #f4ece0;
+            border-color: #8d6e63;
+            color: #3e2723;
+        }
+
+        /* Pop-up e Overlay */
         .popup-note { 
             display: none; 
             position: fixed; 
@@ -77,53 +110,33 @@
             border-radius: 8px; 
             padding: 25px; 
             box-shadow: 0 0 50px rgba(0,0,0,0.9); 
-            z-index: 1000; 
+            z-index: 2000; 
             overflow-y: auto; 
         }
 
-        .popup-note h2 { 
-            margin-top: 0; 
-            color: #5d4037; 
-            border-bottom: 2px solid #d7ccc8; 
-            padding-bottom: 10px; 
-            font-family: 'Garamond', serif; 
-        }
-
-        #popup-text { 
-            white-space: pre-line; 
-            color: #3e2723; 
-            line-height: 1.6; 
-            font-size: 17px; 
-            font-family: 'Georgia', serif; 
-        }
-
-        .close-popup { 
-            position: absolute; 
-            top: 5px; 
-            right: 15px; 
-            cursor: pointer; 
-            font-size: 28px; 
-            font-weight: bold; 
-            color: #8d6e63; 
-        }
-
-        .overlay { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.7); 
-            z-index: 999; 
-        }
+        .popup-note h2 { margin-top: 0; color: #5d4037; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; font-family: 'Garamond', serif; }
+        #popup-text { white-space: pre-line; color: #3e2723; line-height: 1.6; font-size: 17px; font-family: 'Georgia', serif; }
+        .close-popup { position: absolute; top: 5px; right: 15px; cursor: pointer; font-size: 28px; font-weight: bold; color: #8d6e63; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; }
     </style>
 </head>
 <body>
 
-<a href="https://forms.gle/aax9R1qhqda2FpSN7" target="_blank" class="forms-link">
-    <span>Desperte sua magia AQUI</span>
-</a>
+<div class="side-panel">
+    <div class="info-box">
+        Fazer um personagem de D&D 5e é equilibrar essas 3 coisas do jeito que você quiser e pensar em como fazer a sua história:
+        <strong>1. Classe</strong>
+        <strong>2. Raça</strong>
+        <strong>3. Background (Antecedente ou Fundo)</strong>
+        Mas a gente ainda vai conversar.
+    </div>
+
+    <a href="https://nuckturp.com.br/novidades/o-guia-de-classes-de-dd-5e#clerigo" target="_blank" class="rpg-link">📜 Guia de Classes</a>
+    <a href="https://dnd5e.wikidot.com/#toc3" target="_blank" class="rpg-link">📖 Resumo de antecedentes (só vale comum)</a>
+    <a href="https://dnd5e.wikidot.com/lineage#toc11" target="_blank" class="rpg-link">🌍 Guia de raças</a>
+    <a href="https://www.youtube.com/playlist?list=PLmCJTf7SV3OIV6jkuoMiGydNQTzQ_H5zL" target="_blank" class="rpg-link">⚡ Guia rápido de Classes</a>
+    <a href="https://forms.gle/WBgTKqTSkica7Hd36" target="_blank" class="rpg-link forms-highlight">✨ Desperte sua magia AQUI</a>
+</div>
 
 <div class="map-container">
     <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image" id="mapa">
