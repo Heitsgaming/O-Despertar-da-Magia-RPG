@@ -12,18 +12,20 @@
         }
         
         .map-container { 
-            position: relative; width: 100%; height: 100%; 
-            display: flex; justify-content: center; align-items: center;
+            position: relative; display: inline-block;
+            line-height: 0; /* Remove espaços fantasmas abaixo da imagem */
         }
 
         .map-image { 
-            max-width: 100%; max-height: 100%; width: auto; height: auto; 
-            display: block; filter: contrast(1.1);
+            max-width: 100vw; max-height: 100vh; 
+            width: auto; height: auto; display: block;
+            filter: contrast(1.1);
         }
 
-        /* Canvas fixo sobre a imagem */
+        /* Canvas alinhado perfeitamente sobre a imagem */
         #map-canvas {
-            position: absolute; pointer-events: none; z-index: 5;
+            position: absolute; top: 0; left: 0;
+            pointer-events: none; z-index: 5;
         }
 
         area { cursor: pointer; outline: none; }
@@ -54,8 +56,8 @@
 <body>
 
 <div class="map-container" id="container">
-    <canvas id="map-canvas"></canvas>
     <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image" id="mapa">
+    <canvas id="map-canvas"></canvas>
 
     <map name="image-map">
         <area alt="Civilização Perdida" href="javascript:void(0)" onclick="showPopup('Civilização Perdida', 'Relatório geral da expedição Nº12 ao Norte da Selva de Tempendalha\n(Como ficou conhecida pelos estudiosos dos povos humanos)\nA diretriz encumbida desse pelotão é a de rastrear e mapear os vestígios da 11º expedição à Selva de Tempendalha.\nInventário - Consistente do material coletado em campo para futura análise\nFragmentos de esqueletos de animais presumidamente imensos.\nAmostras de um material extremamente resistente.\nFrascos de um líquido roxo-azulado fluorescente.\n\n\tPergaminhos rasgados,\nRetalhos de pinturas\nFerramentas quebradas\nUma língua indecifrável.')" coords="422,1985,1030,1869" shape="rect">
@@ -76,7 +78,7 @@
         <area alt="Terras Elementais" href="javascript:void(0)" onclick="showPopup('Terras Elementais', '\tPouco se visita as Terras Elementais para saber o que tem lá. Relatos de algumas expedições falam sobre grandes florestas de cogumelos, vulcões que emergem e voltam ao chão em questão de meses, ilhas flutuantes, criaturas inimagináveis e muitas coisas mais. Com muito esforço, é possível encontrar descendentes de um ou outro povoado residente de lá, mas anos de adaptação às condições naturais imprevisíveis cobram o preço sobre essas pessoas, que dificilmente são capazes de sobreviver na normalidade.')" coords="1503,127,1923,293" shape="rect">
         <area alt="Território Pedra-Galho" href="javascript:void(0)" onclick="showPopup('Território Pedra-Galho', 'O território conhecido hoje como Floresta Pedra-Galho já foi considerado uma área infestada de goblins, completamente tomada pela desordem e absolutamente intransponível para qualquer um que pensasse duas vezes. No entanto, o que antes parecia uma horda desorganizada de pequenos arruaceiros emergiu como um exército disciplinado sob o estandarte de Skrop Filho, que, no desejo de vingar a morte de seu pai, articulou a invasão do território dos anões, localizado nas montanhas ao sul.\n\nDepois de uma série de batalhas sangrentas, os anões, até então sem liderança do clã Pedregulho, foram sobrepujados pelas tropas de Skrop Filho. Em um diplomático tratado de rendição, o povo anão foi expulso das montanhas e exilado para as antigas terras goblins. Completamente exaustos e abalados pela vergonha da derrota inquestionável, o clã Pedregulho se repartiu entre aqueles que desejavam se reerguer para reconquistar as montanhas e aqueles que olhavam para essa situação como uma oportunidade de viver uma outra vida.\n\nNo momento, o clã Rocha-Pedra e o clã Poda-Galho disputam para reerguer o que antes foi a sociedade anã, cada um à sua maneira.')" coords="2795,434,3229,601" shape="rect">
         <area alt="Nova Skrópolis" href="javascript:void(0)" onclick="showPopup('Nova Skrópolis', 'Nova Skrópolis está sendo construída sobre Mitravan, antigo epicentro de desenvolvimento industrial do povo anão. Sob a liderança de Skrop Filho, a sociedade goblin marcha para um futuro brilhante, fundado no conhecimento técnico e na engenhosidade dos anões, mas adaptado para o dinamismo e para a imensidão da massa goblin. Engenhocas de mineração estão se transformando em verdadeiras fábricas, novas classes sociais estão surgindo, escolas estão se tornando academias…\nA expansão dessa nova metrópole marca o ponto de virada para o estabelecimento dos goblins como superpotência no cenário mundial.')" coords="2799,973,3313,1057" shape="rect">
-        <area alt="Clãs Nórdicos Federados" href="javascript:void(0)" onclick="showPopup('Clãs Nórdicos Federados', 'Ao contrário do que se pensa sobre os povos bárbaros do norte, não são de uma cultura de extrema violência e barbaridade. Muito pelo contrário, já que estão profundamente conectados com sua espiritualidade. Logo na primeira infância, à cada pessoa nórdica, é designado um patrono, um guia que deverá ser cultivado e nutrido à medida em que se amadurece na cultura e nos rituais nórdicos. Cada clã se organiza da maneira que bem entende nesse panteão, mas a Federação dos Clãs Nórdicos surgiu como chamado de união para a proteção da Aurora Boreal, que serve como uma entidade mística para esses povos.\n\n\tMesmo não sendo os mais habilidosos nas grandes táticas de batalha e técnicas afiadas de combate, são combatentes formidáveis que contam com a força evocada de sua ancestralidade. Além disso, são habilidosos com as muitas das artes do comércio pelo fato de incorporarem os dogmas de conduta de seus patronos em sua organização de mercado. A passagem perigosa pelas pradarias silenciosas dificulta a expansão de seus empreendimentos, mas os novos desdobramentos no Território Pedra-Galho podem ser o caminho para um futuro próspero.\n\tSão inspirados nos povos escandinavos e germânicos.')" coords="2379,94,3493,196" shape="rect">
+        <area alt="Clãs Nórdicos Federados" href="javascript:void(0)" onclick="showPopup('Clãs Nórdicos Federados', 'Ao contrário do que se pensa sobre os povos bárbaros do norte, não são de uma cultura de extrema violência e barbaridade. Muito pelo contrário, já que estão profundamente conectados com sua espiritualidade. Logo na primeira infância, à cada pessoa nórdica, é designado um patrono, um guia que deverá ser cultivado e nutrido à medida em que se amadurece na cultura e nos rituais nórdicos. Cada clã se organiza da maneira que bem entende nesse panteão, mas a Federação dos Clãs Nórdicos surgiu como chamado de união para a proteção da Aurora Boreal, que serve como uma entidade mística para esses povos.\n\n\tMesmo não sendo os mais habilidosos nas grandes táticas de batalha e técnicas afiadas de combate, são combatentes formidáveis que contam com a força evocada de sua ancestralidade. Além disso, são habilidosos com as muitas das artes do comércio pelo fato de incorporarem os dogmas de conduta de seus patronos em sua organization de mercado. A passagem perigosa pelas pradarias silenciosas dificulta a expansão de seus empreendimentos, mas os novos desdobramentos no Território Pedra-Galho podem ser o caminho para um futuro próspero.\n\tSão inspirados nos povos escandinavos e germânicos.')" coords="2379,94,3493,196" shape="rect">
         <area alt="Baía Mercantil" href="javascript:void(0)" onclick="showPopup('Baía Mercantil', 'Essa baía nada mais é do que um conjunto de vilarejos costeiros, altamente evoluídos no departamento financeiro e logístico, cujo povo está envolvido de maneiras misteriosas com o comércio mundial. Nessa região é possível encontrar artigos de origem irrastreável, que vêm de lugares além do conhecimento. É um lugar cujas leis são definidas pelos grandes barões e líderes de frotas em conclaves recheados de discussões acaloradas e tentativas de assassinato. Justamente por isso que a pirataria não é presente nessa área, para que o poder se mantenha controlado nas mãos de pessoas específicas.')" coords="2875,1614,2828,1570,2969,1256,3012,1274" shape="poly">
     </map>
 </div>
@@ -96,56 +98,52 @@
     const ctx = canvas.getContext('2d');
     const img = document.getElementById('mapa');
 
-    // Inicialização e Redimensionamento
-    $(window).on('load resize', function() {
-        $('map').imageMapResize();
-        setTimeout(ajustarCanvas, 100);
-    });
-
-    function ajustarCanvas() {
-        canvas.width = img.clientWidth;
-        canvas.height = img.clientHeight;
-        canvas.style.left = img.offsetLeft + "px";
-        canvas.style.top = img.offsetTop + "px";
+    // Sincroniza o tamanho do Canvas com o tamanho da Imagem na tela
+    function syncCanvas() {
+        const rect = img.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
     }
 
-    // Efeito Ciano com Fade nas Bordas (Gradiente Radial)
+    $(window).on('load resize', function() {
+        $('map').imageMapResize();
+        syncCanvas();
+    });
+
+    // Efeito de Brilho Ciano com Gradiente Radial "Soft"
     $('area').on('mouseenter', function() {
         const coords = $(this).attr('coords').split(',').map(Number);
-        const shape = $(this).attr('shape');
         
+        // Fatores de escala para converter coordenadas reais em coordenadas da tela
         const scaleX = img.clientWidth / img.naturalWidth;
         const scaleY = img.clientHeight / img.naturalHeight;
 
+        // Limpa o canvas antes de desenhar o novo brilho
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Desenha o caminho da área
-        ctx.beginPath();
-        if (shape === 'rect') {
-            ctx.rect(coords[0]*scaleX, coords[1]*scaleY, (coords[2]-coords[0])*scaleX, (coords[3]-coords[1])*scaleY);
-        } else {
-            ctx.moveTo(coords[0]*scaleX, coords[1]*scaleY);
-            for(let i=2; i<coords.length; i+=2) ctx.lineTo(coords[i]*scaleX, coords[i+1]*scaleY);
-            ctx.closePath();
+        // Calcula o centro da área para posicionar a aura de luz
+        let sumX = 0, sumY = 0;
+        for(let i=0; i<coords.length; i+=2) {
+            sumX += coords[i] * scaleX;
+            sumY += coords[i+1] * scaleY;
         }
+        const centerX = sumX / (coords.length / 2);
+        const centerY = sumY / (coords.length / 2);
 
-        // Criar Centro do Brilho (Média das coordenadas)
-        let centerX = 0, centerY = 0;
-        for(let i=0; i<coords.length; i+=2) { centerX += coords[i]*scaleX; centerY += coords[i+1]*scaleY; }
-        centerX /= (coords.length/2);
-        centerY /= (coords.length/2);
+        // Define um raio dinâmico baseado na área (mínimo de 60px para ser visível)
+        const radius = Math.max(80 * scaleX, 120);
 
-        // Raio do brilho baseado no tamanho da área
-        const radius = Math.max((coords[2]-coords[0])*scaleX || 100, 150);
+        // Cria o gradiente radial (Ciano -> Transparente)
+        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+        gradient.addColorStop(0, 'rgba(0, 255, 255, 0.5)'); // Centro mais intenso
+        gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.15)'); // Meio do caminho
+        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)'); // Borda some totalmente
 
-        // Criar o "Fade" (Gradiente Radial)
-        const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-        grad.addColorStop(0, 'rgba(0, 255, 255, 0.4)'); // Centro intenso
-        grad.addColorStop(1, 'rgba(0, 255, 255, 0)');   // Borda some (Fade)
-
-        ctx.fillStyle = grad;
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = "cyan";
+        ctx.fillStyle = gradient;
+        
+        // Desenha um círculo de luz suave
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         ctx.fill();
 
     }).on('mouseleave', function() {
@@ -157,15 +155,23 @@
         document.getElementById('popup-text').innerText = text;
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.style.display = 'block'; overlay.style.display = 'block';
-        setTimeout(() => { popup.classList.add('active'); overlay.classList.add('active'); }, 10);
+        popup.style.display = 'block'; 
+        overlay.style.display = 'block';
+        setTimeout(() => { 
+            popup.classList.add('active'); 
+            overlay.classList.add('active'); 
+        }, 10);
     }
 
     function closePopup() {
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.classList.remove('active'); overlay.classList.remove('active');
-        setTimeout(() => { popup.style.display = 'none'; overlay.style.display = 'none'; }, 300);
+        popup.classList.remove('active'); 
+        overlay.classList.remove('active');
+        setTimeout(() => { 
+            popup.style.display = 'none'; 
+            overlay.style.display = 'none'; 
+        }, 300);
     }
 </script>
 
