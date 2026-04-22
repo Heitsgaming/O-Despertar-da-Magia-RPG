@@ -12,20 +12,22 @@
         }
         
         .map-container { 
-            position: relative; display: inline-block;
-            line-height: 0; /* Remove espaços fantasmas abaixo da imagem */
+            position: relative; 
+            display: flex; justify-content: center; align-items: center;
+            width: 100%; height: 100%;
         }
 
         .map-image { 
-            max-width: 100vw; max-height: 100vh; 
+            max-width: 100%; max-height: 100%; 
             width: auto; height: auto; display: block;
             filter: contrast(1.1);
         }
 
-        /* Canvas alinhado perfeitamente sobre a imagem */
+        /* Canvas agora é escravo da posição da imagem */
         #map-canvas {
-            position: absolute; top: 0; left: 0;
-            pointer-events: none; z-index: 5;
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
         }
 
         area { cursor: pointer; outline: none; }
@@ -55,7 +57,7 @@
 </head>
 <body>
 
-<div class="map-container" id="container">
+<div class="map-container">
     <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image" id="mapa">
     <canvas id="map-canvas"></canvas>
 
@@ -98,11 +100,13 @@
     const ctx = canvas.getContext('2d');
     const img = document.getElementById('mapa');
 
-    // Sincroniza o tamanho do Canvas com o tamanho da Imagem na tela
+    // Sincronização exata: Canvas assume o tamanho e posição da imagem renderizada
     function syncCanvas() {
         const rect = img.getBoundingClientRect();
         canvas.width = rect.width;
         canvas.height = rect.height;
+        canvas.style.top = img.offsetTop + "px";
+        canvas.style.left = img.offsetLeft + "px";
     }
 
     $(window).on('load resize', function() {
@@ -110,18 +114,16 @@
         syncCanvas();
     });
 
-    // Efeito de Brilho Ciano com Gradiente Radial "Soft"
     $('area').on('mouseenter', function() {
         const coords = $(this).attr('coords').split(',').map(Number);
         
-        // Fatores de escala para converter coordenadas reais em coordenadas da tela
+        // Fatores de escala baseados no tamanho real vs renderizado
         const scaleX = img.clientWidth / img.naturalWidth;
         const scaleY = img.clientHeight / img.naturalHeight;
 
-        // Limpa o canvas antes de desenhar o novo brilho
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Calcula o centro da área para posicionar a aura de luz
+        // Centro da área
         let sumX = 0, sumY = 0;
         for(let i=0; i<coords.length; i+=2) {
             sumX += coords[i] * scaleX;
@@ -130,18 +132,16 @@
         const centerX = sumX / (coords.length / 2);
         const centerY = sumY / (coords.length / 2);
 
-        // Define um raio dinâmico baseado na área (mínimo de 60px para ser visível)
-        const radius = Math.max(80 * scaleX, 120);
+        // Ajuste de raio para escala
+        const radius = Math.max(70 * scaleX, 100);
 
-        // Cria o gradiente radial (Ciano -> Transparente)
+        // Gradiente Radial (Aura Ciana Suave)
         const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-        gradient.addColorStop(0, 'rgba(0, 255, 255, 0.5)'); // Centro mais intenso
-        gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.15)'); // Meio do caminho
-        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)'); // Borda some totalmente
+        gradient.addColorStop(0, 'rgba(0, 255, 255, 0.4)'); // Centro intenso
+        gradient.addColorStop(0.6, 'rgba(0, 255, 255, 0.1)'); // Fade médio
+        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)'); // Borda invisível
 
         ctx.fillStyle = gradient;
-        
-        // Desenha um círculo de luz suave
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -155,23 +155,15 @@
         document.getElementById('popup-text').innerText = text;
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.style.display = 'block'; 
-        overlay.style.display = 'block';
-        setTimeout(() => { 
-            popup.classList.add('active'); 
-            overlay.classList.add('active'); 
-        }, 10);
+        popup.style.display = 'block'; overlay.style.display = 'block';
+        setTimeout(() => { popup.classList.add('active'); overlay.classList.add('active'); }, 10);
     }
 
     function closePopup() {
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.classList.remove('active'); 
-        overlay.classList.remove('active');
-        setTimeout(() => { 
-            popup.style.display = 'none'; 
-            overlay.style.display = 'none'; 
-        }, 300);
+        popup.classList.remove('active'); overlay.classList.remove('active');
+        setTimeout(() => { popup.style.display = 'none'; overlay.style.display = 'none'; }, 300);
     }
 </script>
 
