@@ -6,100 +6,57 @@
     <title>Mapa Mundi - RPG</title>
     <style>
         body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: #0d0d0d; 
-            overflow: hidden; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: #0d0d0d; overflow: hidden; 
+            display: flex; justify-content: center; align-items: center;
         }
         
         .map-container { 
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center;
         }
 
         .map-image { 
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            display: block;
-            filter: sepia(15%) contrast(1.1);
-            transition: filter 0.5s ease;
+            max-width: 100%; max-height: 100%; width: auto; height: auto; 
+            display: block; filter: contrast(1.1);
         }
 
-        area { outline: none; }
+        /* O Canvas para o efeito Ciano */
+        #map-canvas {
+            position: absolute; pointer-events: none;
+            top: 0; left: 0; z-index: 5;
+        }
+
+        area { cursor: pointer; outline: none; }
 
         .popup-note { 
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
+            display: none; position: fixed; top: 50%; left: 50%; 
             transform: translate(-50%, -50%) scale(0.9); 
-            width: 550px; 
-            max-width: 90%;
-            max-height: 85vh;
-            background: #fdf5e6; 
-            border: 4px double #5d4037; 
-            border-radius: 8px; 
-            padding: 25px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.9); 
-            z-index: 1000; 
-            overflow-y: auto; 
-            opacity: 0;
+            width: 550px; max-width: 90%; max-height: 85vh;
+            background: #fdf5e6; border: 4px double #5d4037; border-radius: 8px; 
+            padding: 25px; box-shadow: 0 0 50px rgba(0,0,0,0.9); 
+            z-index: 1000; overflow-y: auto; opacity: 0;
             transition: all 0.3s ease-out;
         }
 
-        .popup-note.active {
-            display: block;
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-
-        .popup-note h2 { 
-            margin-top: 0; 
-            color: #5d4037; 
-            border-bottom: 2px solid #d7ccc8; 
-            padding-bottom: 10px;
-            font-family: 'Garamond', serif;
-        }
-
-        #popup-text { 
-            white-space: pre-line; 
-            color: #3e2723; 
-            line-height: 1.6; 
-            font-size: 17px; 
-            font-family: 'Georgia', serif;
-        }
-
+        .popup-note.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        .popup-note h2 { margin-top: 0; color: #5d4037; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; font-family: 'Garamond', serif; }
+        #popup-text { white-space: pre-line; color: #3e2723; line-height: 1.6; font-size: 17px; font-family: 'Georgia', serif; }
         .close-popup { position: absolute; top: 5px; right: 15px; cursor: pointer; font-size: 28px; font-weight: bold; color: #8d6e63; }
 
         .overlay { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.7); 
-            backdrop-filter: blur(4px); 
-            z-index: 999; 
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); 
+            z-index: 999; opacity: 0; transition: opacity 0.3s ease;
         }
-
         .overlay.active { display: block; opacity: 1; }
     </style>
 </head>
 <body>
 
-<div class="map-container">
-    <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image">
+<div class="map-container" id="container">
+    <canvas id="map-canvas"></canvas>
+    <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image" id="mapa">
 
     <map name="image-map">
         <area alt="Civilização Perdida" href="javascript:void(0)" onclick="showPopup('Civilização Perdida', 'Relatório geral da expedição Nº12 ao Norte da Selva de Tempendalha\n(Como ficou conhecida pelos estudiosos dos povos humanos)\nA diretriz encumbida desse pelotão é a de rastrear e mapear os vestígios da 11º expedição à Selva de Tempendalha.\nInventário - Consistente do material coletado em campo para futura análise\nFragmentos de esqueletos de animais presumidamente imensos.\nAmostras de um material extremamente resistente.\nFrascos de um líquido roxo-azulado fluorescente.\n\n\tPergaminhos rasgados,\nRetalhos de pinturas\nFerramentas quebradas\nUma língua indecifrável.')" coords="422,1985,1030,1869" shape="rect">
@@ -116,7 +73,7 @@
         <area alt="Sultanato Hamil" href="javascript:void(0)" onclick="showPopup('Sultanato Hamil', 'O Sultanato Hamil é uma civilização que se estabeleceu ao longo do último século como potência comercial na costa ao norte do Deserto do Castigo. Sob a liderança da Dinastia Hamil, os habitantes dessa região foram abençoados com épocas sequenciais de boas colheitas, o que fez o comércio local florescer e os tornou adorados pela população.\n\tSão um povo de religiosidade diversa, que preza pela boa hospitalidade e pelo desenvolvimento do intelecto pessoal. Essas habilidades, somadas ao conhecimento dos caminhos ocultos do deserto, os colocam em uma posição vital para a movimentação de mercadorias através do continente.\n\tSão inspirados nos povos árabes do Oriente Médio do séc. XII-XV')" coords="2180,1606,2788,1729" shape="rect">
         <area alt="Ilhas Tempestuosas" href="javascript:void(0)" onclick="showPopup('Ilhas Tempestuosas', '“Não há o menor motivo para atracar nas Ilhas Tempestuosas se você preza pela sua integridade”\n\n\tA região das Ilhas Tempestuosas é um dos lugares mais inóspitos do mundo. Dentre as coisas que se pode esperar de lá estão: Mares inavegáveis, travessias perigosas, montanhas íngremes perfurando o mar, ventos que cortam a pele, tempestades de raios, criaturas monumentais, os mais cruéis dos corsários, cadáveres flutuantes, maldições e, certamente, a morte.\n\tPara se tornar um habitante dessa região, se é que ainda resta algum, é preciso abandonar toda e qualquer esperança.')" coords="3617,1627,3996,1757" shape="rect">
         <area alt="Pantanal" href="javascript:void(0)" onclick="showPopup('Pantanal', 'O Pantanal é uma das regiões mais misteriosas deste mundo. Sabe-se que há um povo que o habita. Estima-se que as piores criaturas do mar nasceram ali. É um lugar de fauna e flora altamente conectados, por vezes agindo como uma só. Para uma pessoa comum, definitivamente não é um lugar convidativo para se viver.')" coords="664,490,1047,577" shape="rect">
-        <area alt="Território Tritão" href="javascript:void(0)" onclick="showPopup('Território Tritão', 'Apesar de espalhados em pequenos povoados por todo o Mar Médio, seu maior agrupamento reside ao norte do delta do Rio Raso. O boas línguas dizem que é nessa região que deve ficar sua capital, uma enorme cidade no fundo do mar, com torres de centenas de andares e cúpulas de vidro. Mas não espere ouvir o mesmo da boca de um tritão. São extremamente reclusos quanto à sua localização ou qualquer descrição de sua terra natal. Suas crenças variam conforme as influências que recebem de cada região, mas são sempre adaptadas à realidade oceânica.\n\n\tIncontestáveis no combate aquático, vivem uma vida molhada, raramente se misturando com outros povos. Apesar disso, não é raro de se ver pequenos conflitos entre tritões locais e habitantes de cidades costeiras, com contos e mitos construindo sua reputação ameaadora.')" coords="1540,1227,1927,1303" shape="rect">
+        <area alt="Território Tritão" href="javascript:void(0)" onclick="showPopup('Território Tritão', 'Apesar de espalhados em pequenos povoados por todo o Mar Médio, seu maior agrupamento reside ao norte do delta do Rio Raso. O boas línguas dizem que é nessa região que deve ficar sua capital, uma enorme cidade no fundo do mar, com torres de centenas de andares e cúpulas de vidro. Mas não espere ouvir o mesmo da boca de um tritão. São extremamente reclusos quanto à sua localização ou qualquer descrição de sua terra natal. Suas crenças variam conforme as influências que recebem de cada região, mas são sempre adaptadas à realidade oceânica.\n\n\tIncontestáveis no combate aquático, vivem uma vida molhada, raramente se misturando com outros povos. Apesar disso, não é raro de se ver pequenos conflitos entre tritões locais e habitantes de cidades costeiras, com contos e mitos construindo sua reputação ameaçadora.')" coords="1540,1227,1927,1303" shape="rect">
         <area alt="Terras Elementais" href="javascript:void(0)" onclick="showPopup('Terras Elementais', '\tPouco se visita as Terras Elementais para saber o que tem lá. Relatos de algumas expedições falam sobre grandes florestas de cogumelos, vulcões que emergem e voltam ao chão em questão de meses, ilhas flutuantes, criaturas inimagináveis e muitas coisas mais. Com muito esforço, é possível encontrar descendentes de um ou outro povoado residente de lá, mas anos de adaptação às condições naturais imprevisíveis cobram o preço sobre essas pessoas, que dificilmente são capazes de sobreviver na normalidade.')" coords="1503,127,1923,293" shape="rect">
         <area alt="Território Pedra-Galho" href="javascript:void(0)" onclick="showPopup('Território Pedra-Galho', 'O território conhecido hoje como Floresta Pedra-Galho já foi considerado uma área infestada de goblins, completamente tomada pela desordem e absolutamente intransponível para qualquer um que pensasse duas vezes. No entanto, o que antes parecia uma horda desorganizada de pequenos arruaceiros emergiu como um exército disciplinado sob o estandarte de Skrop Filho, que, no desejo de vingar a morte de seu pai, articulou a invasão do território dos anões, localizado nas montanhas ao sul.\n\nDepois de uma série de batalhas sangrentas, os anões, até então sem liderança do clã Pedregulho, foram sobrepujados pelas tropas de Skrop Filho. Em um diplomático tratado de rendição, o povo anão foi expulso das montanhas e exilado para as antigas terras goblins. Completamente exaustos e abalados pela vergonha da derrota inquestionável, o clã Pedregulho se repartiu entre aqueles que desejavam se reerguer para reconquistar as montanhas e aqueles que olhavam para essa situação como uma oportunidade de viver uma outra vida.\n\nNo momento, o clã Rocha-Pedra e o clã Poda-Galho disputam para reerguer o que antes foi a sociedade anã, cada um à sua maneira.')" coords="2795,434,3229,601" shape="rect">
         <area alt="Nova Skrópolis" href="javascript:void(0)" onclick="showPopup('Nova Skrópolis', 'Nova Skrópolis está sendo construída sobre Mitravan, antigo epicentro de desenvolvimento industrial do povo anão. Sob a liderança de Skrop Filho, a sociedade goblin marcha para um futuro brilhante, fundado no conhecimento técnico e na engenhosidade dos anões, mas adaptado para o dinamismo e para a imensidão da massa goblin. Engenhocas de mineração estão se transformando em verdadeiras fábricas, novas classes sociais estão surgindo, escolas estão se tornando academias…\nA expansão dessa nova metrópole marca o ponto de virada para o estabelecimento dos goblins como superpotência no cenário mundial.')" coords="2799,973,3313,1057" shape="rect">
@@ -136,8 +93,50 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/image-map-resizer/1.0.10/js/imageMapResizer.min.js"></script>
 
 <script>
-    $(window).on('load', function() {
+    const canvas = document.getElementById('map-canvas');
+    const ctx = canvas.getContext('2d');
+    const img = document.getElementById('mapa');
+
+    $(window).on('load resize', function() {
         $('map').imageMapResize();
+        ajustarCanvas();
+    });
+
+    function ajustarCanvas() {
+        canvas.width = img.clientWidth;
+        canvas.height = img.clientHeight;
+        canvas.style.left = img.offsetLeft + "px";
+        canvas.style.top = img.offsetTop + "px";
+    }
+
+    // Efeito Ciano ao passar o mouse
+    $('area').on('mouseenter', function() {
+        const coords = $(this).attr('coords').split(',').map(Number);
+        const shape = $(this).attr('shape');
+        
+        // Calcular escala (porque a imagem redimensiona na tela)
+        const scaleX = img.clientWidth / img.naturalWidth;
+        const scaleY = img.clientHeight / img.naturalHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "cyan";
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "cyan";
+        ctx.fillStyle = "rgba(0, 255, 255, 0.2)";
+
+        if (shape === 'rect') {
+            ctx.rect(coords[0]*scaleX, coords[1]*scaleY, (coords[2]-coords[0])*scaleX, (coords[3]-coords[1])*scaleY);
+        } else {
+            ctx.moveTo(coords[0]*scaleX, coords[1]*scaleY);
+            for(let i=2; i<coords.length; i+=2) ctx.lineTo(coords[i]*scaleX, coords[i+1]*scaleY);
+            ctx.closePath();
+        }
+        ctx.stroke();
+        ctx.fill();
+    }).on('mouseleave', function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
     function showPopup(title, text) {
@@ -145,23 +144,15 @@
         document.getElementById('popup-text').innerText = text;
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.style.display = 'block';
-        overlay.style.display = 'block';
-        setTimeout(() => {
-            popup.classList.add('active');
-            overlay.classList.add('active');
-        }, 10);
+        popup.style.display = 'block'; overlay.style.display = 'block';
+        setTimeout(() => { popup.classList.add('active'); overlay.classList.add('active'); }, 10);
     }
 
     function closePopup() {
         const popup = document.getElementById('popup-note');
         const overlay = document.getElementById('overlay');
-        popup.classList.remove('active');
-        overlay.classList.remove('active');
-        setTimeout(() => {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
-        }, 300);
+        popup.classList.remove('active'); overlay.classList.remove('active');
+        setTimeout(() => { popup.style.display = 'none'; overlay.style.display = 'none'; }, 300);
     }
 </script>
 
