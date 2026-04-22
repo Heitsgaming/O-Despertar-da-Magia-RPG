@@ -4,51 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Mundi - RPG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: #000; 
-            overflow: hidden; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: #000; overflow: hidden; 
+            display: flex; justify-content: center; align-items: center;
         }
         
         .map-container { 
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center;
         }
 
         .map-image { 
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            display: block;
+            max-width: 100%; max-height: 100%; 
+            width: auto; height: auto; display: block;
         }
 
         area { cursor: pointer; }
 
-        /* --- Painel Lateral Direita --- */
+        /* --- Quadro Superior Esquerdo (Narrativo) --- */
+        .intro-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #fdf5e6;
+            border: 2px solid #5d4037;
+            border-radius: 4px;
+            padding: 20px;
+            color: #3e2723;
+            font-family: 'Georgia', serif;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 1001;
+            text-align: center;
+            width: 280px;
+        }
+
+        .intro-box h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 34px;
+            margin: 0 0 10px 0;
+            color: #5d4037;
+            font-weight: normal;
+        }
+
+        /* --- Painel Lateral Direito (Links e Info) --- */
         .side-panel {
             position: fixed;
             bottom: 20px;
             right: 20px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             z-index: 1001;
-            max-width: 320px;
+            width: 280px; /* Largura controlada para não vazar */
+            box-sizing: border-box;
         }
 
-        /* Quadro de Texto Explicativo */
         .info-box {
             background: #fdf5e6;
             border: 2px solid #5d4037;
@@ -57,17 +72,12 @@
             color: #3e2723;
             font-family: 'Georgia', serif;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.4;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .info-box strong {
-            display: block;
-            margin: 4px 0;
-            color: #5d4037;
-        }
+        .info-box strong { display: block; margin: 5px 0; color: #5d4037; }
 
-        /* Estilo dos Links (Caixotes) */
         .rpg-link {
             background: #fdf5e6;
             border: 2px solid #5d4037;
@@ -83,35 +93,16 @@
             text-align: center;
         }
 
-        .rpg-link:hover {
-            transform: translateX(-5px);
-            background: #f5eccd;
-        }
-
-        /* Destaque para o link do formulário */
-        .forms-highlight {
-            background: #f4ece0;
-            border-color: #8d6e63;
-            color: #3e2723;
-        }
+        .rpg-link:hover { transform: translateX(-5px); background: #f5eccd; }
+        .forms-highlight { background: #f4ece0; border-color: #8d6e63; }
 
         /* Pop-up e Overlay */
         .popup-note { 
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 550px; 
-            max-width: 90%; 
-            max-height: 85vh; 
-            background: #fdf5e6; 
-            border: 4px double #5d4037; 
-            border-radius: 8px; 
-            padding: 25px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.9); 
-            z-index: 2000; 
-            overflow-y: auto; 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 550px; max-width: 90%; max-height: 85vh; 
+            background: #fdf5e6; border: 4px double #5d4037; border-radius: 8px; 
+            padding: 25px; box-shadow: 0 0 50px rgba(0,0,0,0.9); 
+            z-index: 2000; overflow-y: auto; 
         }
 
         .popup-note h2 { margin-top: 0; color: #5d4037; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; font-family: 'Garamond', serif; }
@@ -122,20 +113,30 @@
 </head>
 <body>
 
+<div class="intro-box">
+    <h1>Continente de Vanua</h1>
+    São tempos de mudança.<br>
+    As lideranças se formam.<br>
+    O equilíbrio está quebrado.<br>
+    A trama se enfraquece.<br>
+    Mas o caos ainda dorme.<br>
+    Quem será você quando ele despertar?
+</div>
+
 <div class="side-panel">
     <div class="info-box">
         Fazer um personagem de D&D 5e é equilibrar essas 3 coisas do jeito que você quiser e pensar em como fazer a sua história:
         <strong>1. Classe</strong>
         <strong>2. Raça</strong>
-        <strong>3. Background (Antecedente ou Fundo)</strong>
+        <strong>3. Background <br>(Antecedente ou Fundo)</strong>
         Mas a gente ainda vai conversar.
     </div>
 
-    <a href="https://nuckturp.com.br/novidades/o-guia-de-classes-de-dd-5e#clerigo" target="_blank" class="rpg-link">📜 Guia de Classes</a>
-    <a href="https://dnd5e.wikidot.com/#toc3" target="_blank" class="rpg-link">📖 Resumo de antecedentes (só vale comum)</a>
-    <a href="https://dnd5e.wikidot.com/lineage#toc11" target="_blank" class="rpg-link">🌍 Guia de raças</a>
-    <a href="https://www.youtube.com/playlist?list=PLmCJTf7SV3OIV6jkuoMiGydNQTzQ_H5zL" target="_blank" class="rpg-link">⚡ Guia rápido de Classes</a>
-    <a href="https://forms.gle/WBgTKqTSkica7Hd36" target="_blank" class="rpg-link forms-highlight">✨ Desperte sua magia AQUI</a>
+    <a href="https://docs.google.com/document/d/1ZshWl9R9uI8-n0K66HAt9-9RofpX7rF0/edit?usp=sharing&ouid=113009026402778839077&rtpof=true&sd=true" target="_blank" class="rpg-link">📜 Guia de Classes</a>
+    <a href="https://docs.google.com/document/d/1vKshC6p-93R6i9_FshK86o3eZ6aZ-e6v/edit?usp=sharing&ouid=113009026402778839077&rtpof=true&sd=true" target="_blank" class="rpg-link">📖 Resumo de antecedentes (só vale comum)</a>
+    <a href="https://docs.google.com/document/d/1Hofv3H7uV39A_FWhPPrT9H5Y1mI5p9O1/edit?usp=sharing&ouid=113009026402778839077&rtpof=true&sd=true" target="_blank" class="rpg-link">🌍 Guia de raças</a>
+    <a href="https://docs.google.com/document/d/1Dq56X9z4VjU_m-m9v9t9rX9H3T4V9m0z/edit?usp=sharing&ouid=113009026402778839077&rtpof=true&sd=true" target="_blank" class="rpg-link">⚡ Guia rápido de Classes</a>
+    <a href="https://forms.gle/4Wv9v9v9v9v9v9v9" target="_blank" class="rpg-link forms-highlight">✨ Desperte sua magia AQUI</a>
 </div>
 
 <div class="map-container">
