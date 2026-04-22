@@ -6,81 +6,104 @@
     <title>Mapa Mundi - RPG</title>
     <style>
         body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background-color: #0d0d0d; overflow: hidden; 
-            display: flex; justify-content: center; align-items: center;
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: #000; 
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .map-container { 
-            position: relative; 
-            display: flex; justify-content: center; align-items: center;
-            width: 100%; height: 100%;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .map-image { 
-            max-width: 100%; max-height: 100%; 
-            width: auto; height: auto; display: block;
-            filter: contrast(1.1);
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
         }
 
-        /* Canvas agora é escravo da posição da imagem */
-        #map-canvas {
-            position: absolute;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        area { cursor: pointer; outline: none; }
+        area { cursor: pointer; }
 
         .popup-note { 
-            display: none; position: fixed; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%) scale(0.9); 
-            width: 550px; max-width: 90%; max-height: 85vh;
-            background: #fdf5e6; border: 4px double #5d4037; border-radius: 8px; 
-            padding: 25px; box-shadow: 0 0 50px rgba(0,0,0,0.9); 
-            z-index: 1000; overflow-y: auto; opacity: 0;
-            transition: all 0.3s ease-out;
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 550px; /* Um pouco mais largo para os textos longos */
+            max-width: 90%;
+            max-height: 85vh;
+            background: #fdf5e6; 
+            border: 4px double #5d4037; 
+            border-radius: 4px; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            z-index: 1000; 
+            overflow-y: auto; 
         }
 
-        .popup-note.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        .popup-note h2 { margin-top: 0; color: #5d4037; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; font-family: 'Garamond', serif; }
-        #popup-text { white-space: pre-line; color: #3e2723; line-height: 1.6; font-size: 17px; font-family: 'Georgia', serif; }
+        .popup-note h2 { margin-top: 0; color: #5d4037; border-bottom: 1px solid #d7ccc8; padding-bottom: 10px; }
+        #popup-text { white-space: pre-line; color: #3e2723; line-height: 1.6; font-size: 16px; }
         .close-popup { position: absolute; top: 5px; right: 15px; cursor: pointer; font-size: 28px; font-weight: bold; color: #8d6e63; }
-
-        .overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); 
-            z-index: 999; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .overlay.active { display: block; opacity: 1; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
     </style>
 </head>
 <body>
 
 <div class="map-container">
-    <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image" id="mapa">
-    <canvas id="map-canvas"></canvas>
+    <img src="Mapa mundi.jpg" usemap="#image-map" class="map-image">
 
     <map name="image-map">
         <area alt="Civilização Perdida" href="javascript:void(0)" onclick="showPopup('Civilização Perdida', 'Relatório geral da expedição Nº12 ao Norte da Selva de Tempendalha\n(Como ficou conhecida pelos estudiosos dos povos humanos)\nA diretriz encumbida desse pelotão é a de rastrear e mapear os vestígios da 11º expedição à Selva de Tempendalha.\nInventário - Consistente do material coletado em campo para futura análise\nFragmentos de esqueletos de animais presumidamente imensos.\nAmostras de um material extremamente resistente.\nFrascos de um líquido roxo-azulado fluorescente.\n\n\tPergaminhos rasgados,\nRetalhos de pinturas\nFerramentas quebradas\nUma língua indecifrável.')" coords="422,1985,1030,1869" shape="rect">
+        
         <area alt="Povos Helênicos do Sul" href="javascript:void(0)" onclick="showPopup('Povos Helênicos do Sul', 'Os povos helênicos do Sul são uma civilização inspirada nos contos gregos. Suas forças militares são altamente disciplinadas em terra como os espartanos e formidáveis nos mares como a marinha ateniense. Seu contato com o místico é conduzido pelo contato com os templos e peregrinações ao Monte Olimpo, um lugar de contato extremamente restrito.\nOs helênicos costumam ser bastante isolados e evitar contato com estrangeiros como forma de preservar seus costumes. Nesse território, as lendas são vivas e os Deuses interferem na vida dos habitantes diretamente.')" coords="1789,1762,1482,1549" shape="rect">
-        <area alt="Aliança-Magna dos Povos Humanos" href="javascript:void(0)" onclick="showPopup('Aliança-Magna', 'A história da Aliança-Magna dos Povos Humanos pode ser contada a partir de uma época de extrema violência. \n\nSéculos atrás, quem habitava essas terras eram remanescentes do reinado de Imbécilo III, cujos descendentes, cada vez mais estúpidos, foram responsáveis pelo declínio do primeiro governo dos humanos. Os povos vizinhos, cientes dessa situação, aproveitaram para anexar pequenas porções de terra para si e expandir sua esfera de influência, enviando colonos e comerciantes para o interior daquele território.\n\nCom o tempo, criou-se um ambiente extremamente diverso culturalmente, com produtos, especiarias, ferramentas, costumes e ideias de differentes cantos do continente sendo passados de mão em mão. A região tornou-se o melhor lugar do mundo para um mercador fazer a sua fortuna. Com isso, cidades se tornaram pequenas metrópoles, cada qual com sua forma de se governar: Coroaram-se reis e rainhas, elegeram-se cônsules, prefeitos e ministros, consagraram-se chefes, líderes religiosos, grandes guerreiros. Quanto mais espaço uma delas ganhava, mais nítida ficava a diferença dela para as outras.\n\nO que sucedeu foi um momento de extrema instabilidade política, com um sentimento geral de insegurança se espalhando pelo território. Esse período foi sustentado até que Estúpendo, o Diplomata, liderou a unificação dos povos humanos e formou uma União Europeia dos humanos.\n\nO que antes eram pequenas cidades e feudos independentes, cada qual sustentado pela própria subsistência, hoje é um grande conjunto ordenado de povos e culturas.')" coords="1427,1625,1105,1567,888,1346,1000,1285,1402,1505" shape="poly">
+        
+        <area alt="Aliança-Magna dos Povos Humanos" href="javascript:void(0)" onclick="showPopup('Aliança-Magna', 'A história da Aliança-Magna dos Povos Humanos pode ser contada a partir de uma época de extrema violência. \n\nSéculos atrás, quem habitava essas terras eram remanescentes do reinado de Imbécilo III, cujos descendentes, cada vez mais estúpidos, foram responsáveis pelo declínio do primeiro governo dos humanos. Os povos vizinhos, cientes dessa situação, aproveitaram para anexar pequenas porções de terra para si e expandir sua esfera de influência, enviando colonos e comerciantes para o interior daquele território.\n\nCom o tempo, criou-se um ambiente extremamente diverso culturalmente, com produtos, especiarias, ferramentas, costumes e ideias de diferentes cantos do continente sendo passados de mão em mão. A região tornou-se o melhor lugar do mundo para um mercador fazer a sua fortuna. Com isso, cidades se tornaram pequenas metrópoles, cada qual com sua forma de se governar: Coroaram-se reis e rainhas, elegeram-se cônsules, prefeitos e ministros, consagraram-se chefes, líderes religiosos, grandes guerreiros. Quanto mais espaço uma delas ganhava, mais nítida ficava a diferença dela para as outras.\n\nO que sucedeu foi um momento de extrema instabilidade política, com um sentimento geral de insegurança se espalhando pelo território. Esse período foi sustentado até que Estúpendo, o Diplomata, liderou a unificação dos povos humanos e formou uma União Europeia dos humanos.\n\nO que antes eram pequenas cidades e feudos independentes, cada qual sustentado pela própria subsistência, hoje é um grande conjunto ordenado de povos e culturas.')" coords="1427,1625,1105,1567,888,1346,1000,1285,1402,1505" shape="poly">
+        
         <area alt="Reinados Emergentes do Sul" href="javascript:void(0)" onclick="showPopup('Reinados Emergentes do Sul', 'Os Reinados Emergentes do Sul são um conjunto de povos que triunfaram sob condições extremamente adversas. Seja pelo êxodo dos povos que habitavam as planícies dos Khans ao leste, pela expansão da área contaminada pela praga ao sul, pela instabilidade comercial vinda dos conflitos helênicos e humanos ao norte ou pelos eventos místicos bizarros dos arredores da Selva de Tempendalha, o território onde eles se estabelecem é considerado historicamente instável.\n\nPode-se dizer que é uma área cuja política está em formação, com os líderes mais preocupados com sobrevivência do que com expansão. É possível encontrar seres de diversas espécies e culturas, com formas de governo bem distintas de seus vizinhos humanos.')" coords="1257,2062,1731,2167" shape="rect">
+        
         <area alt="União Evangélica dos Elfos" href="javascript:void(0)" onclick="showPopup('União Evangélica dos Elfos', 'Elfos nem sempre existiram neste mundo e há muitas lendas que narram sua chegada. Há quem diga que são uma versão inferior de criaturas que habitam as estrelas, filhos de uma estrela cadente que perdeu seu rumo e caiu no meio de uma floresta. Outros creem ser um povo amaldiçoado, contaminados por uma droga maligna oriunda dos cristais de onde tiram sua força vital. Apesar disso, a grande maioria das pessoas sequer viu um elfo na vida.\n\nSão um povo que não se mistura e prezam pela pureza em sua linhagem, seja ela física ou espiritual. Tanto que aqueles que deixam o território dos elfos precisam conseguir uma autorização do conselho e portar uma insígnia que o define como representante oficial dos elfos em outras terras. Elfos são educados a ser muito orgulhosos de seu estilo de vida, por isso configuram uma sociedade altamente religiosa e disciplinada, berço de figuras poderosas.')" coords="624,1382,454,1252" shape="rect">
+        
         <area alt="Império Ocidental" href="javascript:void(0)" onclick="showPopup('Império Ocidental', 'O império ocidental é a civilização mais antiga que perdurou os desafios do tempo. Com uma história repleta de grandes heróis e embates com figuras mitológicas poderosas, os ocidentais passaram a maior parte de seu passado dedicados ao entendimento do plano espiritual, evitando se envolver em conflitos externos. O vale onde o império se estabelece é um local altamente carregado de energia mística, contendo assim diversas regiões onde as leis do mundo natural são dobradas e os resultados são imprevisíveis.\n\nAs últimas décadas foram marcadas por regentes que previram momentos de grande instabilidade para o império, resultando no projeto de construção de uma grande muralha que deverá proteger o território ocidental de ameaças externas.\n\nÉ uma nação inspirada nos contos e lendas do Oriente, especialmente chineses, coreanos, japoneses e mongóis.')" coords="67,763,461,915" shape="rect">
+        
         <area alt="Área da Praga" href="javascript:void(0)" onclick="showPopup('Área da Praga', 'Antes, o próspero Império do Sul, que dominava toda a parte sul do continente, hoje uma terra inóspita e cruel, que a própria luz já abandonou. A chamada “Praga” é o castigo que a terra sofre pela maldição do Cavaleiro das Trevas, que outrora foi um grande imperador, famoso por seu inabalável senso de justiça. \nHoje ainda pode-se encontrar vestígios de assentamentos esquecidos, pequenos núcleos de sobreviventes que caminham no mesmo solo onde as criaturas das trevas rastejam. É um território contaminado por magia necrótica, onde a linha entre a vida e a morte se afina, ao mesmo tempo em que se espalha e contamina toda a vida ao seu redor.')" coords="1862,2723,2542,2854" shape="rect">
+        
         <area alt="Tribos Bárbaras do Sul" href="javascript:void(0)" onclick="showPopup('Tribos Bárbaras do Sul', 'Muito de acordo com o que se pensa das Tribos Bárbaras do Sul, eles são de fato extremamente violentos. Formados pela mistura dos sobreviventes da queda do grande Império do Sul com os exilados dos povos da selva, o que não falta nesse povo é instinto de sobrevivência. Atualmente estão pinçados entre uma floresta inóspita e o crescimento desenfreado de uma maldição aterrorizante e enxergam o comércio marítimo como única alternativa de sobrevivência.\n\n\tDe todos os povos que habitam este continente, são os que menos se conectam com a magia, preferindo sempre resolver seus conflitos à ferro e fogo. É uma cultura extremamente rica na fabricação de armas e ferramentas de sobrevivência, especializada em saques rápidos e profundamente familiar com as mais cruéis técnicas de tortura.\n\tSão inspirados nos povos mouros e bérberes do norte da África ')" coords="2701,2855,2723,2775,3251,2714,3273,2768,3132,2819,3143,2887,2886,2927,2853,2862" shape="poly">
+        
         <area alt="Território Selvagem" href="javascript:void(0)" onclick="showPopup('Território Selvagem', 'O território selvagem é uma área que um dia já foi central para o comércio no continente. Com a queda do Império do Sul e o avanço da praga, as rotas que antes levavam milhares de mercadorias através do continente se tornaram estradas vazias e perigosas para qualquer um que não esteja preparado para lutar. E mesmo tendo sido tão famoso, é uma região que ainda guarda muitos mistérios.')" coords="2072,2370,2187,2576,2665,2439,2658,2258,2611,2229" shape="poly">
+        
         <area alt="Povos Unidos da Selva" href="javascript:void(0)" onclick="showPopup('Povos Unidos da Selva', 'O que se chama de “Povo da Selva” são os habitantes da Selva de L\'Manzi, um território desconhecido para a maioria. Normalmente, não possuem a fisionomia de uma pessoa comum, se assemelhando à criaturas das profundezas da mata. Isso confere à eles uma aptidão para a sobrevivência em ambientes como esse, assim como um melhoramento nas habilidades naturais em comparação àqueles de fora.\n\n\tOs habitantes dessa região costumam ter fortes conexões com a espiritualidade através do mundo natural, com bênçãos concedidas por grandes árvores, rios e montanhas, entidades que incorporam a cultura desse povo. É uma floresta extremamente úmida, de difícil acesso e de difícil navegação. Por outro lado, grupos expedicionários e caravanas mercantis oriundas da selva já foram avistadas nas rotas comerciais abandonadas do território selvagem ou na travessia do deserto do castigo. Alguma mobilização está em curso.')" coords="2896,2338,3605,2443" shape="rect">
+        
         <area alt="Território dos Khans" href="javascript:void(0)" onclick="showPopup('Território dos Khans', 'O território onde se estabelecem os Khans centauros já teve diversas utilidades. Já foi ponto central para distribuição de bens oriundos do Império do Sul para o resto do continente em sua época de ouro, na qual centauros desempenhavam um papel vital como escolta armada de mercadorias. Também já foi considerado parte das Terras Selvagens, quando consistia somente de pequenos clãs fragmentados, envolvidos em conflitos esdrúxulos, inebriados por sua glória do passado. A expansão da área contaminada pela praga, no entanto, forçou os líderes dos centauros a se articularem de forma diferente.\n\tSão profundamente vinculados à vida nas estepes, mestres no adestramento de aves e técnicas de caça. Por muitas eras adotaram um estilo de vida semi-nômade, mas hoje, organizados, os Khans centauros conduzem dezenas de conclaves estratégicos para decidir o destino de seu povo.\n\n\n\tSão inspirados nas várias culturas das estepes mongólicas, principalmente nos tempos de Genghis Khan.')" coords="1959,1994,2271,2128" shape="rect">
+        
         <area alt="Sultanato Hamil" href="javascript:void(0)" onclick="showPopup('Sultanato Hamil', 'O Sultanato Hamil é uma civilização que se estabeleceu ao longo do último século como potência comercial na costa ao norte do Deserto do Castigo. Sob a liderança da Dinastia Hamil, os habitantes dessa região foram abençoados com épocas sequenciais de boas colheitas, o que fez o comércio local florescer e os tornou adorados pela população.\n\tSão um povo de religiosidade diversa, que preza pela boa hospitalidade e pelo desenvolvimento do intelecto pessoal. Essas habilidades, somadas ao conhecimento dos caminhos ocultos do deserto, os colocam em uma posição vital para a movimentação de mercadorias através do continente.\n\tSão inspirados nos povos árabes do Oriente Médio do séc. XII-XV')" coords="2180,1606,2788,1729" shape="rect">
+        
         <area alt="Ilhas Tempestuosas" href="javascript:void(0)" onclick="showPopup('Ilhas Tempestuosas', '“Não há o menor motivo para atracar nas Ilhas Tempestuosas se você preza pela sua integridade”\n\n\tA região das Ilhas Tempestuosas é um dos lugares mais inóspitos do mundo. Dentre as coisas que se pode esperar de lá estão: Mares inavegáveis, travessias perigosas, montanhas íngremes perfurando o mar, ventos que cortam a pele, tempestades de raios, criaturas monumentais, os mais cruéis dos corsários, cadáveres flutuantes, maldições e, certamente, a morte.\n\tPara se tornar um habitante dessa região, se é que ainda resta algum, é preciso abandonar toda e qualquer esperança.')" coords="3617,1627,3996,1757" shape="rect">
+        
         <area alt="Pantanal" href="javascript:void(0)" onclick="showPopup('Pantanal', 'O Pantanal é uma das regiões mais misteriosas deste mundo. Sabe-se que há um povo que o habita. Estima-se que as piores criaturas do mar nasceram ali. É um lugar de fauna e flora altamente conectados, por vezes agindo como uma só. Para uma pessoa comum, definitivamente não é um lugar convidativo para se viver.')" coords="664,490,1047,577" shape="rect">
-        <area alt="Território Tritão" href="javascript:void(0)" onclick="showPopup('Território Tritão', 'Apesar de espalhados em pequenos povoados por todo o Mar Médio, seu maior agrupamento reside ao norte do delta do Rio Raso. O boas línguas dizem que é nessa região que deve ficar sua capital, uma enorme cidade no fundo do mar, com torres de centenas de andares e cúpulas de vidro. Mas não espere ouvir o mesmo da boca de um tritão. São extremamente reclusos quanto à sua localização ou qualquer descrição de sua terra natal. Suas crenças variam conforme as influências que recebem de cada região, mas são sempre adaptadas à realidade oceânica.\n\n\tIncontestáveis no combate aquático, vivem uma vida molhada, raramente se misturando com outros povos. Apesar disso, não é raro de se ver pequenos conflitos entre tritões locais e habitantes de cidades costeiras, com contos e mitos construindo sua reputação ameaadora.')" coords="1540,1227,1927,1303" shape="rect">
+        
+        <area alt="Território Tritão" href="javascript:void(0)" onclick="showPopup('Território Tritão', 'Apesar de espalhados em pequenos povoados por todo o Mar Médio, seu maior agrupamento reside ao norte do delta do Rio Raso. O boas línguas dizem que é nessa região que deve ficar sua capital, uma enorme cidade no fundo do mar, com torres de centenas de andares e cúpulas de vidro. Mas não espere ouvir o mesmo da boca de um tritão. São extremamente reclusos quanto à sua localização ou qualquer descrição de sua terra natal. Suas crenças variam conforme as influências que recebem de cada região, mas são sempre adaptadas à realidade oceânica.\n\n\tIncontestáveis no combate aquático, vivem uma vida molhada, raramente se misturando com outros povos. Apesar disso, não é raro de se ver pequenos conflitos entre tritões locais e habitantes de cidades costeiras, com contos e mitos construindo sua reputação ameaçadora.')" coords="1540,1227,1927,1303" shape="rect">
+        
         <area alt="Terras Elementais" href="javascript:void(0)" onclick="showPopup('Terras Elementais', '\tPouco se visita as Terras Elementais para saber o que tem lá. Relatos de algumas expedições falam sobre grandes florestas de cogumelos, vulcões que emergem e voltam ao chão em questão de meses, ilhas flutuantes, criaturas inimagináveis e muitas coisas mais. Com muito esforço, é possível encontrar descendentes de um ou outro povoado residente de lá, mas anos de adaptação às condições naturais imprevisíveis cobram o preço sobre essas pessoas, que dificilmente são capazes de sobreviver na normalidade.')" coords="1503,127,1923,293" shape="rect">
-        <area alt="Território Pedra-Galho" href="javascript:void(0)" onclick="showPopup('Território Pedra-Galho', 'O território conhecido hoje como Floresta Pedra-Galho já foi considerado uma área infestada de goblins, completamente tomada pela desordem e absolutamente intransponível para qualquer um que pensasse duas vezes. No entanto, o que antes parecia uma horda desorganizada de pequenos arruaceiros emergiu como um exército disciplinado sob o estandarte de Skrop Filho, que, no desejo de vingar a morte de seu pai, articulou a invasão do território dos anões, localizado nas montanhas ao sul.\n\nDepois de uma série de batalhas sangrentas, os anões, até então sem liderança do clã Pedregulho, foram sobrepujados pelas tropas de Skrop Filho. Em um diplomático tratado de rendição, o povo anão foi expulso das montanhas e exilado para as antigas terras goblins. Completamente exaustos e abalados pela vergonha da derrota inquestionável, o clã Pedregulho se repartiu entre aqueles que desejavam se reerguer para reconquistar as montanhas e aqueles que olhavam para essa situação como uma oportunidade de viver uma outra vida.\n\nNo momento, o clã Rocha-Pedra e o clã Poda-Galho disputam para reerguer o que antes foi a sociedade anã, cada um à sua maneira.')" coords="2795,434,3229,601" shape="rect">
+        
+        <area alt="Território Pedra-Galho" href="javascript:void(0)" onclick="showPopup('Território Pedra-Galho', 'O território conhecido hoje como Floresta Pedra-Galho já foi considerado uma área infestada de goblins, completamente tomada pela desordem e absolutamente intransponível para qualquer um que pensasse duas vezes. No entanto, o que antes parecia uma horda desorganizada de pequenos arruaceiros emergiu como um exército disciplinado sob o estandarte de Skrop Filho, que, no desejo de vingar a morte de seu pai, articulou a invasão do território dos anões, localizado nas montanhas ao sul.\n\nDepois de uma série de batalhas sangrentas, os anões, até então sob liderança do clã Pedregulho, foram sobrepujados pelas tropas de Skrop Filho. Em um diplomático tratado de rendição, o povo anão foi expulso das montanhas e exilado para as antigas terras goblins. Completamente exaustos e abalados pela vergonha da derrota inquestionável, o clã Pedregulho se repartiu entre aqueles que desejavam se reerguer para reconquistar as montanhas e aqueles que olhavam para essa situação como uma oportunidade de viver uma outra vida.\n\nNo momento, o clã Rocha-Pedra e o clã Poda-Galho disputam para reerguer o que antes foi a sociedade anã, cada um à sua maneira.')" coords="2795,434,3229,601" shape="rect">
+        
         <area alt="Nova Skrópolis" href="javascript:void(0)" onclick="showPopup('Nova Skrópolis', 'Nova Skrópolis está sendo construída sobre Mitravan, antigo epicentro de desenvolvimento industrial do povo anão. Sob a liderança de Skrop Filho, a sociedade goblin marcha para um futuro brilhante, fundado no conhecimento técnico e na engenhosidade dos anões, mas adaptado para o dinamismo e para a imensidão da massa goblin. Engenhocas de mineração estão se transformando em verdadeiras fábricas, novas classes sociais estão surgindo, escolas estão se tornando academias…\nA expansão dessa nova metrópole marca o ponto de virada para o estabelecimento dos goblins como superpotência no cenário mundial.')" coords="2799,973,3313,1057" shape="rect">
-        <area alt="Clãs Nórdicos Federados" href="javascript:void(0)" onclick="showPopup('Clãs Nórdicos Federados', 'Ao contrário do que se pensa sobre os povos bárbaros do norte, não são de uma cultura de extrema violência e barbaridade. Muito pelo contrário, já que estão profundamente conectados com sua espiritualidade. Logo na primeira infância, à cada pessoa nórdica, é designado um patrono, um guia que deverá ser cultivado e nutrido à medida em que se amadurece na cultura e nos rituais nórdicos. Cada clã se organiza da maneira que bem entende nesse panteão, mas a Federação dos Clãs Nórdicos surgiu como chamado de união para a proteção da Aurora Boreal, que serve como uma entidade mística para esses povos.\n\n\tMesmo não sendo os mais habilidosos nas grandes táticas de batalha e técnicas afiadas de combate, são combatentes formidáveis que contam com a força evocada de sua ancestralidade. Além disso, são habilidosos com as muitas das artes do comércio pelo fato de incorporarem os dogmas de conduta de seus patronos em sua organization de mercado. A passagem perigosa pelas pradarias silenciosas dificulta a expansão de seus empreendimentos, mas os novos desdobramentos no Território Pedra-Galho podem ser o caminho para um futuro próspero.\n\tSão inspirados nos povos escandinavos e germânicos.')" coords="2379,94,3493,196" shape="rect">
+        
+        <area alt="Clãs Nórdicos Federados" href="javascript:void(0)" onclick="showPopup('Clãs Nórdicos Federados', 'Ao contrário do que se pensa sobre os povos bárbaros do norte, não são de uma cultura de extrema violência e barbaridade. Muito pelo contrário, já que estão profundamente conectados com sua espiritualidade. Logo na primeira infância, à cada pessoa nórdica, é designado um patrono, um guia que deverá ser cultivado e nutrido à medida em que se amadurece na cultura e nos rituais nórdicos. Cada clã se organiza da maneira que bem entende nesse panteão, mas a Federação dos Clãs Nórdicos surgiu como chamado de união para a proteção da Aurora Boreal, que serve como uma entidade mística para esses povos.\n\n\tMesmo não sendo os mais habilidosos nas grandes táticas de batalha e técnicas afiadas de combate, são combatentes formidáveis que contam com a força evocada de sua ancestralidade. Além disso, são habilidosos com as muitas das artes do comércio pelo fato de incorporarem os dogmas de conduta de seus patronos em sua organização de mercado. A passagem perigosa pelas pradarias silenciosas dificulta a expansão de seus empreendimentos, mas os novos desdobramentos no Território Pedra-Galho podem ser o caminho para um futuro próspero.\n\tSão inspirados nos povos escandinavos e germânicos.')" coords="2379,94,3493,196" shape="rect">
+        
         <area alt="Baía Mercantil" href="javascript:void(0)" onclick="showPopup('Baía Mercantil', 'Essa baía nada mais é do que um conjunto de vilarejos costeiros, altamente evoluídos no departamento financeiro e logístico, cujo povo está envolvido de maneiras misteriosas com o comércio mundial. Nessa região é possível encontrar artigos de origem irrastreável, que vêm de lugares além do conhecimento. É um lugar cujas leis são definidas pelos grandes barões e líderes de frotas em conclaves recheados de discussões acaloradas e tentativas de assassinato. Justamente por isso que a pirataria não é presente nessa área, para que o poder se mantenha controlado nas mãos de pessoas específicas.')" coords="2875,1614,2828,1570,2969,1256,3012,1274" shape="poly">
     </map>
 </div>
@@ -96,74 +119,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/image-map-resizer/1.0.10/js/imageMapResizer.min.js"></script>
 
 <script>
-    const canvas = document.getElementById('map-canvas');
-    const ctx = canvas.getContext('2d');
-    const img = document.getElementById('mapa');
-
-    // Sincronização exata: Canvas assume o tamanho e posição da imagem renderizada
-    function syncCanvas() {
-        const rect = img.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        canvas.style.top = img.offsetTop + "px";
-        canvas.style.left = img.offsetLeft + "px";
-    }
-
-    $(window).on('load resize', function() {
+    $(window).on('load', function() {
         $('map').imageMapResize();
-        syncCanvas();
-    });
-
-    $('area').on('mouseenter', function() {
-        const coords = $(this).attr('coords').split(',').map(Number);
-        
-        // Fatores de escala baseados no tamanho real vs renderizado
-        const scaleX = img.clientWidth / img.naturalWidth;
-        const scaleY = img.clientHeight / img.naturalHeight;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Centro da área
-        let sumX = 0, sumY = 0;
-        for(let i=0; i<coords.length; i+=2) {
-            sumX += coords[i] * scaleX;
-            sumY += coords[i+1] * scaleY;
-        }
-        const centerX = sumX / (coords.length / 2);
-        const centerY = sumY / (coords.length / 2);
-
-        // Ajuste de raio para escala
-        const radius = Math.max(70 * scaleX, 100);
-
-        // Gradiente Radial (Aura Ciana Suave)
-        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-        gradient.addColorStop(0, 'rgba(0, 255, 255, 0.4)'); // Centro intenso
-        gradient.addColorStop(0.6, 'rgba(0, 255, 255, 0.1)'); // Fade médio
-        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)'); // Borda invisível
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        ctx.fill();
-
-    }).on('mouseleave', function() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
     function showPopup(title, text) {
         document.getElementById('popup-title').innerText = title;
         document.getElementById('popup-text').innerText = text;
-        const popup = document.getElementById('popup-note');
-        const overlay = document.getElementById('overlay');
-        popup.style.display = 'block'; overlay.style.display = 'block';
-        setTimeout(() => { popup.classList.add('active'); overlay.classList.add('active'); }, 10);
+        document.getElementById('popup-note').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
     }
 
     function closePopup() {
-        const popup = document.getElementById('popup-note');
-        const overlay = document.getElementById('overlay');
-        popup.classList.remove('active'); overlay.classList.remove('active');
-        setTimeout(() => { popup.style.display = 'none'; overlay.style.display = 'none'; }, 300);
+        document.getElementById('popup-note').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
     }
 </script>
 
